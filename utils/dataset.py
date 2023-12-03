@@ -67,20 +67,24 @@ class ResidueDataset(Dataset):
             
         try:
             embeddings_dict = dict(np.load(embeddings_path)) # {"node_repr": ..., "edge_repr": ...}
-            node_repr, edge_repr = embeddings_dict['node_repr'], embeddings_dict['edge_repr']
+            # node_repr, edge_repr = embeddings_dict['node_repr'], embeddings_dict['edge_repr']
+            node_repr = embeddings_dict['node_repr']
+            node_repr = np.array(node_repr, dtype=np.float64)
         except:
             logger.warning(f"Error loading {embeddings_path}")
             return self.null_data(data)
         
         if self.args.no_edge_embs:
-            edge_repr = np.zeros_like(edge_repr)
+            # edge_repr = np.zeros_like(edge_repr)
+            r_dim = node_repr.shape[0]
+            edge_repr = np.zeros((r_dim, r_dim, 128))
         
         if node_repr.shape[0] != data['resi'].num_nodes:
             logger.warning(f"LM dim error at {embeddings_path}: expected {data['resi'].num_nodes} got {node_repr.shape} {edge_repr.shape}")
             return self.null_data(data)
             
-        data['resi'].node_attr = torch.tensor(node_repr)
-        edge_repr = torch.tensor(edge_repr)
+        data['resi'].node_attr = torch.tensor(node_repr).float()
+        edge_repr = torch.tensor(edge_repr).float()
         src, dst = data['resi'].edge_index[0], data['resi'].edge_index[1]
         data['resi'].edge_attr_ = torch.cat([edge_repr[src, dst], edge_repr[dst, src]], -1)
         

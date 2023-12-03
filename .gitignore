@@ -1,0 +1,10 @@
+data/
+*embeddings/
+env/
+structures/
+esm_embeddings/
+one_hot/
+prottrans/
+out/
+release1.pt
+__pycache__/

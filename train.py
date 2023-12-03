@@ -55,7 +55,7 @@ def main():
         model_dir = os.path.join(args.workdir, str(args.time))
     else:
         model_dir = os.path.join(args.workdir, 'dry_run')
-    if not os.path.exists(model_dir): os.mkdir(model_dir)
+    if not os.path.exists(model_dir): os.makedirs(model_dir)
     
     if not args.resume: 
         yaml_file_name = os.path.join(model_dir, 'args.yaml')

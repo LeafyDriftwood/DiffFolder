@@ -85,3 +85,11 @@ The model checkpoints will be saved under `workdir/[UNIX_TIME]`, timestamped acc
       primaryClass={q-bio.BM}
 }
 ```
+
+
+our conda env:
+`conda activate /users/anair27/data/DiffFolder/DiffFolder/env/difffolder_conda`
+
+esm_embeddings/esm_256_all/9lyz.A.pdb.npz
+
+/users/anair27/data/DiffFolder/DiffFolder/embeddings/omega_apo_embeddings/1f/1f3y.A.pdb.omegafold_num_recycling.4.npz

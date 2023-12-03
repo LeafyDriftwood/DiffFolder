@@ -122,9 +122,9 @@ class PDBFile:
           
     def add(self, coords):
         if type(coords) is np.ndarray:
-            coords = coords.astype(np.float64)
+            coords = coords.astype(np.float32)
         elif type(coords) is torch.Tensor:
-            coords = coords.cpu().double().numpy()
+            coords = coords.cpu().float().numpy()
         
         for i, resi in enumerate(self.chain):
             atoms = RESIDUES[resi.resname]

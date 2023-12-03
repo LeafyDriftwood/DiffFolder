@@ -25,7 +25,7 @@ def main():
     
     if args.reference_only:
         splits = splits[(splits.index == splits.reference)]
-    
+    print(splits.shape)
     splits = splits.iloc[args.worker_id::args.num_workers]
     
     arg_keys = ['omegafold_num_recycling']

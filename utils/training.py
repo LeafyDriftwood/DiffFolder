@@ -54,8 +54,8 @@ def epoch(args, model, loader, optimizer=None, scheduler=None, device='cpu', pri
                 continue
             
             else:
-                logger.error("Uncaught error " + str(e))
-                #raise e
+                logger.error("sUncaught error " + str(e))
+                raise e
                 
         if (i+1) % print_freq == 0:
             logger.info(f"Last {print_freq} iters: loss {np.mean(log['loss'][-print_freq:])} base {np.mean(log['base_loss'][-print_freq:])}")
