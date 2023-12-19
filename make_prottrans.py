@@ -18,7 +18,7 @@ from transformers import T5Tokenizer, T5EncoderModel
 import torch
 import re
 
-device ='cpu'
+device ='cuda'
 transformer_link = "Rostlab/prot_t5_xl_half_uniref50-enc"
 print("Loading: {}".format(transformer_link))
 model = T5EncoderModel.from_pretrained(transformer_link)
@@ -42,7 +42,7 @@ def seq_to_llm(seq):
     with torch.no_grad():
         embedding_repr = model(input_ids=input_ids,attention_mask=attention_mask)
 
-    llm = embedding_repr.last_hidden_state[0,:len(seq)] 
+    llm = embedding_repr.last_hidden_state[0,:len(seq)].cpu()
     return np.array(llm)
 
 def main():
@@ -77,19 +77,9 @@ def main():
         doing += 1
         seq = splits.loc[path]["seqres"]
         
-        try:
+        node_results = seq_to_llm(seq)
 
-            node_results = seq_to_llm(seq)
-
-        except RuntimeError as e:
-            if 'out of memory' in str(e):
-                print(f'CUDA OOM, skipping {path}')
-                torch.cuda.empty_cache()
-                continue
-            
-            else:
-                logger.error("Uncaught error")
-                raise e
+        # node_results = np.zeros(())
         np.savez(embeddings_path, node_repr=node_results, edge_repr=np.zeros((2,2)))
 
     print(args.splits, 'DONE')

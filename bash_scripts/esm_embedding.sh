@@ -2,7 +2,9 @@
 #SBATCH --mem=64G
 #SBATCH -t 48:00:00
 #SBATCH -o esm_embedding_full_%j.out
-#SBATCH -p gpu --gres=gpu:1
+#SBATCH -p rsingh47-gcondo 
+#SBATCH -n 4 #cores
+#SBATCH--gres=gpu:1 --gres-flags=enforce-binding
 #SBATCH --mail-type=END,FAIL,TIME_LIMIT,BEGIN
 #SBATCH --mail-user=akira_nair@brown.edu
 

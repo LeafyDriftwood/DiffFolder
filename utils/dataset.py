@@ -14,7 +14,8 @@ class ResidueDataset(Dataset):
         super(ResidueDataset, self).__init__(**kwargs)
         self.split = split
         
-        embeddings_arg_keys = ['omegafold_num_recycling']
+        # embeddings_arg_keys = ['omegafold_num_recycling']
+        embeddings_arg_keys = [] ## ! CHANGE FOR ESM FILE CONVENTION !
         embeddings_suffix = get_args_suffix(embeddings_arg_keys, args) + '.npz'
         self.embeddings_suffix = embeddings_suffix
         
@@ -60,7 +61,13 @@ class ResidueDataset(Dataset):
             data['resi'].pos = torch.tensor(pos[:,0]).float()
         
         embeddings_name = row.__getattr__(self.args.embeddings_key)
-        embeddings_path = os.path.join(self.args.embeddings_dir, embeddings_name[:2], embeddings_name) + '.' + self.embeddings_suffix
+
+        embeddings_path = os.path.join(self.args.embeddings_dir, embeddings_name[:2], embeddings_name)  \
+                    + ".npz"  # ! CHANGE FOR ESM FILE CONVENTION !
+        #     # + '.' + self.embeddings_suffix ## ! CHANGE FOR ESM FILE CONVENTION !
+
+        # embeddings_path = os.path.join(self.args.embeddings_dir, embeddings_name[:2], embeddings_name) + '.' + self.embeddings_suffix
+        
         if not os.path.exists(embeddings_path):
             logger.warning(f"No LM embeddings at {embeddings_path}")
             return self.null_data(data)

@@ -8,3 +8,7 @@ prottrans/
 out/
 release1.pt
 __pycache__/
+*.pdb
+prot/
+single_structure/
+*.out

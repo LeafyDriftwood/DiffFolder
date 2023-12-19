@@ -11,9 +11,25 @@ You can pip install the required package with: pip install fair-esm
 """
 Usage:
 
-sbatch esm_embedding.sh -i /users/anair27/data/DiffFolder/DiffFolder/splits/limit256.csv -o /users/anair27/data/DiffFolder/DiffFolder/esm_embeddings/esm_256_all -w 2 -id 0
-sbatch esm_embedding.sh -i /users/anair27/data/DiffFolder/DiffFolder/splits/limit256.csv -o /users/anair27/data/DiffFolder/DiffFolder/esm_embeddings/esm_256_all -w 2 -id 1
+ensure environment activated:
+conda activate /users/anair27/data/DiffFolder/DiffFolder/env/difffolder_conda
 
+ for two gpus:
+sbatch bash_scripts/esm_embedding.sh -i /users/anair27/data/DiffFolder/DiffFolder/splits/limit256.csv -o /users/anair27/data/DiffFolder/DiffFolder/esm_embeddings/esm_256_all -w 2 -id 0
+sbatch bash_scripts/esm_embedding.sh -i /users/anair27/data/DiffFolder/DiffFolder/splits/limit256.csv -o /users/anair27/data/DiffFolder/DiffFolder/esm_embeddings/esm_256_all -w 2 -id 1
+
+ for four gpus:
+sbatch bash_scripts/esm_embedding.sh -i /users/anair27/data/DiffFolder/DiffFolder/splits/limit256.csv -o /users/anair27/data/DiffFolder/DiffFolder/esm_embeddings/esm_256_all -w 4 -id 0
+sbatch bash_scripts/esm_embedding.sh -i /users/anair27/data/DiffFolder/DiffFolder/splits/limit256.csv -o /users/anair27/data/DiffFolder/DiffFolder/esm_embeddings/esm_256_all -w 4 -id 1
+sbatch bash_scripts/esm_embedding.sh -i /users/anair27/data/DiffFolder/DiffFolder/splits/limit256.csv -o /users/anair27/data/DiffFolder/DiffFolder/esm_embeddings/esm_256_all -w 4 -id 2
+sbatch bash_scripts/esm_embedding.sh -i /users/anair27/data/DiffFolder/DiffFolder/splits/limit256.csv -o /users/anair27/data/DiffFolder/DiffFolder/esm_embeddings/esm_256_all -w 4 -id 3
+
+ for inference
+sbatch bash_scripts/esm_embedding_cpu.sh -i /users/anair27/data/DiffFolder/DiffFolder/splits/apo.csv -o /users/anair27/data/DiffFolder/DiffFolder/esm_embeddings/esm_apo -w 1 -id 0
+
+sbatch bash_scripts/esm_embedding_cpu.sh -i /users/anair27/data/DiffFolder/DiffFolder/splits/cameo2022.csv -o /users/anair27/data/DiffFolder/DiffFolder/esm_embeddings/esm_cameo -w 1 -id 0
+
+sbatch bash_scripts/esm_embedding_cpu.sh -i /users/anair27/data/DiffFolder/DiffFolder/splits/codnas.csv -o /users/anair27/data/DiffFolder/DiffFolder/esm_embeddings/esm_codnas -w 1 -id 0
 """
 import torch
 import esm
@@ -69,10 +85,10 @@ class ESMEmbeddingModel():
             embedding_array = np.array(sequence_representations[0].cpu().numpy())
             # embedded_seqs.update({name: embedding_array})
             # np.savez(os.path.join(path_to_save, f"{name}"), embedding_array)
-            path_to_file = os.path.join(path_to_save, str(name)[:2], str(name))
+            path_to_file = os.path.join(path_to_save, str(name)[:2])
             if not os.path.exists(path_to_file):
                 os.makedirs(path_to_file)
-            np.savez(path_to_file, **{'node_repr': embedding_array, 'edge_repr': np.zeros((2,2))})
+            np.savez(os.path.join(path_to_file, str(name)), **{'node_repr': embedding_array, 'edge_repr': np.zeros((2,2))})
             del embedding_array
             del sequence_representations
 
@@ -100,7 +116,7 @@ def load_data(path_to_csv):
     # get names
     names = df['name'].tolist()
     # get sequences
-    seqs = df['seq'].tolist()
+    seqs = df['seqres'].tolist()
     return names, seqs
 
 def save_embedding(embedding:dict, path_to_save: str):

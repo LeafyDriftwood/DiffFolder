@@ -1,12 +1,12 @@
 attention: false
 batch: 1
-commit: d55bbd0c588c921ac1cf1fd1a2324bd6cb66ba7e
+commit: 362bee6901bc031cfb5145ec738016c03d68219b
 constant_dur: 100000.0
 cuda_diffuse: false
 data_skip: true
 decay_dur: 500000.0
 dry_run: false
-embeddings_dir: /users/wdorji/data/DiffFolder/DiffFolder/one_hot/training_embeddings
+embeddings_dir: /users/wdorji/data/DiffFolder/DiffFolder/embeddings/one_hot/training_embeddings
 embeddings_key: reference
 epochs: 100
 inf_freq: 1
@@ -50,7 +50,7 @@ sh_lmax: 2
 splits: splits/sampledlimit256.csv
 t_emb_dim: 32
 t_emb_type: sinusoidal
-time: 1701200373552
+time: 1701812719502
 tmax: 1000000.0
 tmin: 0.001
 train_Hf: 2
